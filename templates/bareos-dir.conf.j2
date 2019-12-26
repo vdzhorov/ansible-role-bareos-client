@@ -1,0 +1,5 @@
+Director {
+  Name = bareos-dir
+  Password = "[md5]{{ bareos_clients_password|hash('md5') }}"
+  TLS Enable = No
+}
