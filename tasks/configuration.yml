@@ -1,8 +1,8 @@
 ---
 
-- name: Configure director in /etc/bareos/bareos-fd.d/director/bareos-dir.conf (Client)
+- name: Configure director in {{ bareos_location }}/bareos-fd.d/director/bareos-dir.conf (Client)
   template:
     src: "bareos-dir.conf.j2"
-    dest: "/etc/bareos/bareos-fd.d/director/bareos-dir.conf"
+    dest: "{{ bareos_location }}/bareos-fd.d/director/bareos-dir.conf"
   notify: "Restart bareos-fd"
   tags: [bareos-client]
