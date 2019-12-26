@@ -1,0 +1,15 @@
+---
+
+- name: Install Bareos client packages
+  yum:
+    name: bareos-client
+    state: installed
+  when: ansible_distribution == "CentOS"
+  tags: [bareos-client]
+
+- name: Enable and start the services
+  service:
+    name: bareos-fd
+    enabled: yes
+    state: started
+  tags: [bareos-client]
