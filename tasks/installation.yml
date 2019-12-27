@@ -1,11 +1,17 @@
 ---
 
-- name: Install Bareos client packages
+- name: Install Bareos client packages (CentOS)
   yum:
     name: bareos-client
     state: installed
   when: ansible_distribution == "CentOS"
   tags: [bareos-client]
+
+- name: Install Bareos client packages (Debian or Ubuntu)
+  apt:
+    name: bareos-client
+    state: present
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
 - name: Enable and start the services
   service:
