@@ -1,5 +1,6 @@
 ---
 
 bareos_location: "/etc/bareos"
-bareos_plugins_location: "/usr/lib64/bareos/plugins"
+bareos_plugins_location_centos: "/usr/lib64/bareos/plugins"
+bareos_plugins_location_deb: "/usr/lib/bareos/plugins"
 bareos_git_raw: "https://raw.githubusercontent.com/bareos/bareos-contrib/master/"

@@ -22,12 +22,24 @@
     state: started
   tags: [bareos-client]
 
-- name: Download MySQL plugin
+- name: Download MySQL plugin (CentOS)
   get_url:
     url: "{{ item }}"
-    dest: "{{ bareos_plugins_location }}"
+    dest: "{{ bareos_plugins_location_centos }}"
     mode: 0755
   loop:
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
+  when: ansible_distribution == "CentOS"
+  tags: [bareos-client]
+
+- name: Download MySQL plugin (Debian and Ubuntu)
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ bareos_plugins_location_deb }}"
+    mode: 0755
+  loop:
+    - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
+    - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
   tags: [bareos-client]
