@@ -12,6 +12,7 @@
     name: bareos-client
     state: present
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  tags: [bareos-client]
 
 - name: Enable and start the services
   service:
@@ -28,3 +29,4 @@
   loop:
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
+  tags: [bareos-client]
