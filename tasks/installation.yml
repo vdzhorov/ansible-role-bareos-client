@@ -15,6 +15,19 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
   tags: [bareos-client]
 
+- name: Install bareos-filedaemon-python-plugin (CentOS)
+  yum:
+    name: bareos-filedaemon-python-plugin
+    state: installed
+  when: ansible_distribution == "CentOS"
+
+- name: Install bareos-filedaemon-python-plugin (Debian or Ubuntu)
+  apt:
+    name: bareos-filedaemon-python-plugin
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
 - name: Enable and start the services
   service:
     name: bareos-fd
