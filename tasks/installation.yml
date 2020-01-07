@@ -15,18 +15,25 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
   tags: [bareos-client]
 
+- name: Check if MySQL is installed
+  stat:
+    path: "/usr/sbin/mysqld"
+  register: mysqld
+
 - name: Install bareos-filedaemon-python-plugin (CentOS)
   yum:
     name: bareos-filedaemon-python-plugin
     state: installed
-  when: ansible_distribution == "CentOS"
+  when: ansible_distribution == "CentOS" and mysqld.stat.exists
 
 - name: Install bareos-filedaemon-python-plugin (Debian or Ubuntu)
   apt:
     name: bareos-filedaemon-python-plugin
     state: present
     update_cache: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  when: >
+    (ansible_distribution == "Debian" and and mysqld.stat.exists) or 
+    (ansible_distribution == "Ubuntu" and and mysqld.stat.exists)
 
 - name: Enable and start the services
   service:
@@ -43,7 +50,7 @@
   loop:
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
-  when: ansible_distribution == "CentOS"
+  when: ansible_distribution == "CentOS" and mysqld.stat.exists
   tags: [bareos-client]
 
 - name: Download MySQL plugin (Debian and Ubuntu)
@@ -54,5 +61,7 @@
   loop:
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  when: >
+    (ansible_distribution == "Debian" and and mysqld.stat.exists) or 
+    (ansible_distribution == "Ubuntu" and and mysqld.stat.exists)"
   tags: [bareos-client]
