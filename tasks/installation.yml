@@ -7,6 +7,13 @@
   when: ansible_distribution == "CentOS"
   tags: [bareos-client]
 
+- name: Install Bareos client packages (Virtuozzo 7)
+  yum:
+    name: bareos-client
+    state: installed
+  when: ansible_distribution == "Virtuozzo"
+  tags: [bareos-client]
+
 - name: Install Bareos client packages (Debian or Ubuntu)
   apt:
     name: bareos-client
