@@ -7,9 +7,9 @@
   notify: "Restart bareos-fd"
   tags: [bareos-client]
 
-- name: Configure filedaemon in {{ bareos_location }}/bareos-fd.d/client/myself.conf
+- name: Configure filedaemon in {{ bareos_root_dir }}/bareos-fd.d/client/myself.conf
   template:
     src: "myself.conf.j2"
-    dest: "{{ bareos_location }}/bareos-fd.d/client/myself.conf"
+    dest: "{{ bareos_root_dir }}/bareos-fd.d/client/myself.conf"
   notify: "Restart bareos-fd"
   tags: [bareos-client]
