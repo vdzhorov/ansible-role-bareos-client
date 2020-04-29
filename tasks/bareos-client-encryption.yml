@@ -1,0 +1,112 @@
+---
+
+- name: Install Python-pip package (CentOS 6)
+  yum:
+    name: python-pip
+    state: present
+  when: >
+    ansible_distribution == "CentOS" and 
+    ansible_distribution_major_version == "6"
+
+- name: Install python-pip package (CentOS 7)
+  yum:
+    name: python-pip
+    state: present
+  when: >
+    ansible_distribution == "CentOS" and 
+    ansible_distribution_major_version == "7"    
+
+- name: Install Python3-cryptography package (CentOS 8)
+  dnf:
+    name: python3-pip
+    state: present
+  when: >
+    ansible_distribution == "CentOS" and 
+    ansible_distribution_major_version == "8"
+
+- name: Install python-pip package (Debian 8)
+  yum:
+    name: python-pip
+    state: present
+  when: >
+    ansible_distribution == "Debian" and
+    ansible_distribution_major_version == "8"
+
+- name: Install python-pip package (Debian 9)
+  yum:
+    name: python-pip
+    state: present
+  when: >
+    ansible_distribution == "Debian" and
+    ansible_distribution_major_version == "9"
+
+- name: Install python-pip package (Debian 10)
+  yum:
+    name: python-pip
+    state: present
+  when: >
+    ansible_distribution == "Debian" and
+    ansible_distribution_major_version == "10"
+
+- name: Install python-pip package (Ubuntu 16.04)
+  yum:
+    name: python-pip
+    state: present
+  when: >
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_major_version == "16.04"
+
+- name: Install python-pip package (Ubuntu 18.04)
+  yum:
+    name: python-pip
+    state: present
+  when: >
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_major_version == "18.04"
+
+- name: Ensure python-cryptography package is present
+  pip:
+    name: cryptography
+    state: present
+
+- name: Ensure directories for storing certificates are present
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "{{ bareos_root_dir }}/bareos-fd.d/certificate/csr/"
+    - "{{ bareos_root_dir }}/bareos-fd.d/certificate/private/"
+    - "{{ bareos_root_dir }}/bareos-fd.d/certificate/assembled/"
+
+- name: Generate unique Bareos client private key
+  openssl_privatekey:
+    path: "{{ bareos_root_dir }}/bareos-fd.d/certificate/private/client_key.key"
+    type: RSA
+    size: 2048
+
+- name: Generate Bareos CSR
+  openssl_csr:
+    path: "{{ bareos_root_dir }}/bareos-fd.d/certificate/csr/client_csr.cert"
+    privatekey_path: "{{ bareos_root_dir }}/bareos-fd.d/certificate/private/client_key.key"
+    common_name: "{{ ansible_host }}"
+
+- name: Generate unique Bareos public certificate
+  openssl_certificate:
+    path: "{{ bareos_root_dir }}/bareos-fd.d/certificate/private/client_cert.crt"
+    privatekey_path: "{{ bareos_root_dir }}/bareos-fd.d/certificate/private/client_key.key"
+    csr_path: "{{ bareos_root_dir }}/bareos-fd.d/certificate/csr/client_csr.cert"
+    provider: selfsigned
+
+- name: Assemble the public and private keys
+  assemble:
+    src: "{{ bareos_root_dir }}/bareos-fd.d/certificate/private/"
+    dest: "{{ bareos_root_dir }}/bareos-fd.d/certificate/assembled/consolidated.pem"
+    remote_src: yes
+
+- name: Ensure master public key is present
+  copy:
+    content: "{{ client_pki_master_cert }}"
+    remote_src: yes
+    dest: "{{ bareos_root_dir }}/bareos-fd.d/certificate/master.pem"
+...

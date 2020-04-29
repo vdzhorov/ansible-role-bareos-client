@@ -3,5 +3,8 @@
 # Client installation and configuration
 - include: bareos-client-installation.yml
   tags: add-bareos-client
+- include: bareos-client-encryption.yml
+  when: client_pki_encryption_enabled is defined and client_pki_encryption_enabled
+  tags: add-bareos-client, bareos-client-encryption
 - include: bareos-client-configuration.yml
   tags: add-bareos-client

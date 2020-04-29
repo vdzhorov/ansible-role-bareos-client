@@ -15,4 +15,13 @@ Client {
   # if compatible is set to yes, we are compatible with bacula
   # if set to no, new bareos features are enabled which is the default
   # compatible = yes
+
+  {% if client_pki_encryption_enabled is defined and client_pki_encryption_enabled %}
+
+  PKI Signatures = Yes
+  PKI Encryption = Yes
+  PKI Keypair    = "{{ bareos_root_dir }}/bareos-fd.d/certificate/assembled/consolidated.pem"
+  PKI Master Key = "{{ bareos_root_dir }}/bareos-fd.d/certificate/master.pem"
+  PKI Cipher     = aes128
+  {% endif %}
 }
