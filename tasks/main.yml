@@ -1,7 +1,7 @@
 ---
 
 # Client installation and configuration
-- include: installation.yml
+- include: bareos-client-installation.yml
   tags: add-bareos-client
-- include: configuration.yml
+- include: bareos-client-configuration.yml
   tags: add-bareos-client
