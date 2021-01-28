@@ -99,6 +99,7 @@
   copy:
     src: "{{ item }}"
     dest: "{{ bareos_plugins_location_centos }}"
+    mode: 0755
   loop:
     - BareosFdMySQLclass.py
     - bareos-fd-mysql.py
