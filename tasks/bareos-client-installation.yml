@@ -32,20 +32,47 @@
     path: "/usr/bin/mysql"
   register: sbin_mysql
 
-- name: Install bareos-filedaemon-python-plugin (CentOS)
+- name: Install bareos-filedaemon-python-plugin (CentOS, Bareos=19)
   yum:
     name: "bareos-filedaemon-python-plugin-{{ bareos_version }}"
     state: installed
-  when: ansible_distribution == "CentOS" and (mysql.stat.exists or sbin_mysql.stat.exists)
+  when: >
+    ansible_distribution == "CentOS" and 
+    (mysql.stat.exists or sbin_mysql.stat.exists) and
+    "19." in bareos_version
 
-- name: Install bareos-filedaemon-python-plugin (Debian or Ubuntu)
+- name: Install bareos-filedaemon-python-plugin (CentOS, Bareos >= 20)
+  yum:
+    name: "{{ item }}"
+    state: installed
+  loop:
+    - bareos-filedaemon-python2-plugin
+  when: >
+    ansible_distribution == "CentOS" and 
+    (mysql.stat.exists or sbin_mysql.stat.exists) and not
+    "19." in bareos_version
+
+- name: Install bareos-filedaemon-python-plugin (Debian or Ubuntu, Bareos=19)
   apt:
     name: "bareos-filedaemon-python-plugin-{{ bareos_version }}"
     state: present
     update_cache: yes
   when: >
     (ansible_distribution == "Debian" and (mysql.stat.exists or sbin_mysql.stat.exists)) or 
-    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists))
+    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists)) and
+    "19." in bareos_version
+
+- name: Install bareos-filedaemon-python-plugin (Debian or Ubuntu, Bareos >= 20)
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - bareos-filedaemon-python2-plugin
+  when: >
+    (ansible_distribution == "Debian" and (mysql.stat.exists or sbin_mysql.stat.exists)) or 
+    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists)) and not
+    "19." in bareos_version
 
 - name: Enable and start the services
   service:
