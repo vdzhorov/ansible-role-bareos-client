@@ -16,7 +16,7 @@
 
 - name: Install Bareos client packages (Debian or Ubuntu)
   apt:
-    name: "bareos-client-{{ bareos_version }}"
+    name: "bareos-client"
     state: present
     update_cache: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
@@ -48,13 +48,13 @@
   loop:
     - bareos-filedaemon-python2-plugin
   when: >
-    ansible_distribution == "CentOS" and 
-    (mysql.stat.exists or sbin_mysql.stat.exists) and not
-    "19." in bareos_version
+    (ansible_distribution == "CentOS" and 
+    (mysql.stat.exists or sbin_mysql.stat.exists)) and
+    "19." not in bareos_version
 
 - name: Install bareos-filedaemon-python-plugin (Debian or Ubuntu, Bareos=19)
   apt:
-    name: "bareos-filedaemon-python-plugin-{{ bareos_version }}"
+    name: "bareos-filedaemon-python-plugin"
     state: present
     update_cache: yes
   when: >
@@ -70,9 +70,9 @@
   loop:
     - bareos-filedaemon-python2-plugin
   when: >
-    (ansible_distribution == "Debian" and (mysql.stat.exists or sbin_mysql.stat.exists)) or 
-    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists)) and not
-    "19." in bareos_version
+    ((ansible_distribution == "Debian" and (mysql.stat.exists or sbin_mysql.stat.exists)) or 
+    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists))) and
+    "19." not in bareos_version
 
 - name: Enable and start the services
   service:
@@ -90,9 +90,9 @@
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
   when: >
-    ansible_distribution == "CentOS" and 
-    (mysql.stat.exists or sbin_mysql.stat.exists) and not
-    "19." in bareos_version
+    (ansible_distribution == "CentOS" and 
+    (mysql.stat.exists or sbin_mysql.stat.exists)) and
+    "19." not in bareos_version
   tags: [bareos-client]
 
 - name: Upload MySQL plugin (CentOS, Bareos=19)
@@ -117,15 +117,15 @@
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
     - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
   when: >
-    (ansible_distribution == "Debian" and (mysql.stat.exists or sbin_mysql.stat.exists)) or 
-    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists)) and not
-    "19." in bareos_version
+    ((ansible_distribution == "Debian" and (mysql.stat.exists or sbin_mysql.stat.exists)) or 
+    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists))) and
+    "19." not in bareos_version
   tags: [bareos-client]
 
 - name: Upload MySQL plugin (Debian and Ubuntu, Bareos=19)
   copy:
     src: "{{ item }}"
-    dest: "{{ bareos_plugins_location_centos }}"
+    dest: "{{ bareos_plugins_location_deb }}"
   loop:
     - BareosFdMySQLclass.py
     - bareos-fd-mysql.py
