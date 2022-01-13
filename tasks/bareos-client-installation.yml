@@ -1,10 +1,12 @@
 ---
 
-- name: Install Bareos client packages (CentOS)
+- name: Install Bareos client packages (CentOS or AlmaLinux)
   yum:
     name: "bareos-client-{{ bareos_version }}"
     state: installed
-  when: ansible_distribution == "CentOS"
+  when: >
+    ansible_distribution == "CentOS" or
+    ansible_distribution == "AlmaLinux" 
   tags: [bareos-client]
 
 - name: Install Bareos client packages (Virtuozzo 7)
