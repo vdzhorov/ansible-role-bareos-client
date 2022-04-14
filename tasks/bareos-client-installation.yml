@@ -83,55 +83,19 @@
     state: started
   tags: [bareos-client]
 
-- name: Download MySQL plugin (CentOS, Bareos >= 20)
-  get_url:
-    url: "{{ item }}"
-    dest: "{{ bareos_plugins_location_centos }}"
+- name: Ensure MySQL plugin directory exists
+  file:
+    path: "{{ item }}/fd-plugins/mysql-python"
+    state: directory
     mode: 0755
-  loop:
-    - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
-    - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
-  when: >
-    (ansible_distribution == "CentOS" and 
-    (mysql.stat.exists or sbin_mysql.stat.exists)) and
-    "19." not in bareos_version
-  tags: [bareos-client]
 
-- name: Upload MySQL plugin (CentOS, Bareos=19)
+- name: Upload MySQL plugins
   copy:
     src: "{{ item }}"
-    dest: "{{ bareos_plugins_location_centos }}"
+    dest: "{{ bareos_plugins_location }}/fd-plugins/mysql-python/"
     mode: 0755
+    owner: root
+    group: root
   loop:
     - BareosFdMySQLclass.py
     - bareos-fd-mysql.py
-  when: >
-    ansible_distribution == "CentOS" and 
-    (mysql.stat.exists or sbin_mysql.stat.exists) and
-    "19." in bareos_version
-
-- name: Download MySQL plugin (Debian and Ubuntu, Bareos >= 20)
-  get_url:
-    url: "{{ item }}"
-    dest: "{{ bareos_plugins_location_deb }}"
-    mode: 0755
-  loop:
-    - "{{ bareos_git_raw }}/fd-plugins/mysql-python/BareosFdMySQLclass.py"
-    - "{{ bareos_git_raw }}/fd-plugins/mysql-python/bareos-fd-mysql.py"
-  when: >
-    ((ansible_distribution == "Debian" and (mysql.stat.exists or sbin_mysql.stat.exists)) or 
-    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists))) and
-    "19." not in bareos_version
-  tags: [bareos-client]
-
-- name: Upload MySQL plugin (Debian and Ubuntu, Bareos=19)
-  copy:
-    src: "{{ item }}"
-    dest: "{{ bareos_plugins_location_deb }}"
-  loop:
-    - BareosFdMySQLclass.py
-    - bareos-fd-mysql.py
-  when: >
-    (ansible_distribution == "Debian" and (mysql.stat.exists or sbin_mysql.stat.exists)) or 
-    (ansible_distribution == "Ubuntu" and (mysql.stat.exists or sbin_mysql.stat.exists)) and
-    "19." in bareos_version
