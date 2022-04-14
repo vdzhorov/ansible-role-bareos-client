@@ -1,7 +1,5 @@
 ---
-
 bareos_version: "20.0"
 bareos_root_dir: "/etc/bareos"
-bareos_plugins_location_centos: "/usr/lib64/bareos/plugins"
-bareos_plugins_location_deb: "/usr/lib/bareos/plugins"
 bareos_git_raw: "https://raw.githubusercontent.com/bareos/bareos/master/contrib/"
+...

@@ -1,0 +1,3 @@
+---
+bareos_plugins_location: "/usr/lib64/bareos/plugins"
+...
