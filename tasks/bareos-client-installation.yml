@@ -93,7 +93,7 @@
 
 - name: Ensure MySQL plugin directory exists
   file:
-    path: "{{ item }}/fd-plugins/mysql-python"
+    path: "{{ bareos_plugins_location }}/fd-plugins/mysql-python"
     state: directory
     mode: 0755
 
