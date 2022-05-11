@@ -93,14 +93,14 @@
 
 - name: Ensure MySQL plugin directory exists
   file:
-    path: "{{ bareos_plugins_location }}/fd-plugins/mysql-python"
+    path: "{{ bareos_plugins_location }}"
     state: directory
     mode: 0755
 
 - name: Upload MySQL plugins
   copy:
     src: "{{ item }}"
-    dest: "{{ bareos_plugins_location }}/fd-plugins/mysql-python/"
+    dest: "{{ bareos_plugins_location }}"
     mode: 0755
     owner: root
     group: root
