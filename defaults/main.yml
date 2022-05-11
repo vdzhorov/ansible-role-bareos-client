@@ -1,5 +1,5 @@
 ---
-bareos_version: "20.0"
+bareos_version: "19.2.7"
 bareos_root_dir: "/etc/bareos"
 bareos_git_raw: "https://raw.githubusercontent.com/bareos/bareos/master/contrib/"
 ...
